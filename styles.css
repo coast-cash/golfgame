@@ -1,0 +1,133 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: #f4f6f7;
+  color: #182024;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+h1 {
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  margin-top: 0;
+  color: #47525a;
+}
+
+.photo-card {
+  margin: 1rem 0 1.5rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  background: #d8dde0;
+}
+
+#course-photo {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+#guess-form label {
+  font-weight: 600;
+}
+
+.input-row {
+  margin-top: 0.4rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.6rem;
+}
+
+#course-guess {
+  width: 100%;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 2px solid #bec8cf;
+  padding: 0.65rem 0.75rem;
+}
+
+#course-guess.success {
+  border-color: #1b9f4a;
+  background: #e9f8ee;
+}
+
+#course-guess.error {
+  border-color: #cf2f2f;
+  background: #ffecec;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  background: #125e2f;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.92;
+}
+
+.status {
+  min-height: 1.4rem;
+  margin: 0.75rem 0;
+  font-weight: 600;
+}
+
+.guess-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.guess-item {
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  font-weight: 600;
+}
+
+.guess-item.wrong {
+  background: #ffdede;
+  color: #7a1111;
+}
+
+.guess-item.correct {
+  background: #d7f6df;
+  color: #0e5d2c;
+}
+
+dialog {
+  border: none;
+  border-radius: 12px;
+  max-width: 360px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+#close-modal-btn {
+  background: #5e6870;
+}
