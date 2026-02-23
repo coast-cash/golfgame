@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Golfle</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Golfle</h1>
+      <p class="subtitle">Guess the golf course from today's photo in 6 tries.</p>
+
+      <section class="photo-card" aria-label="Daily golf course photo">
+        <img id="course-photo" alt="Daily golf course hole" />
+      </section>
+
+      <form id="guess-form" autocomplete="off">
+        <label for="course-guess">Your guess</label>
+        <div class="input-row">
+          <input
+            id="course-guess"
+            name="course-guess"
+            type="text"
+            list="course-options"
+            placeholder="Start typing a course name..."
+            required
+          />
+          <datalist id="course-options"></datalist>
+          <button type="submit">Guess</button>
+        </div>
+      </form>
+
+      <p id="status" class="status" aria-live="polite"></p>
+
+      <section>
+        <h2>Guesses</h2>
+        <ul id="guess-list" class="guess-list"></ul>
+      </section>
+    </main>
+
+    <dialog id="result-modal">
+      <h2 id="modal-title"></h2>
+      <p id="modal-message"></p>
+      <div class="modal-actions">
+        <button id="share-btn" type="button">Share result</button>
+        <button id="close-modal-btn" type="button">Close</button>
+      </div>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
