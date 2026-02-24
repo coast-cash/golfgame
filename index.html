@@ -28,13 +28,16 @@
 
       <label for="guess" class="label">Your guess</label>
       <div class="guess-row">
-        <input
-          id="guess"
-          list="course-suggestions"
-          autocomplete="off"
-          placeholder="Start typing a course name..."
-        />
-        <datalist id="course-suggestions"></datalist>
+        <div class="guess-input-wrap">
+          <input
+            id="guess"
+            autocomplete="off"
+            placeholder="Type a course name"
+            aria-autocomplete="list"
+            aria-controls="course-suggestions"
+          />
+          <ul id="course-suggestions" class="suggestions" role="listbox" hidden></ul>
+        </div>
         <button id="guess-button" type="button">Guess</button>
       </div>
 
@@ -42,7 +45,7 @@
 
       <section class="guesses">
         <h2>Guesses</h2>
-        <ol id="guess-list"></ol>
+        <div id="guess-list" class="guess-list"></div>
       </section>
     </main>
     <script src="script.js"></script>

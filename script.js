@@ -48,6 +48,9 @@ const LANDSCAPE_FALLBACK_DATA_URI = `data:image/svg+xml;utf8,${encodeURIComponen
 
 let targetCourse = '';
 let gameOver = false;
+let filteredSuggestions = [];
+let activeSuggestionIndex = -1;
+
 const guesses = [];
 
 function normalizeName(value) {
@@ -85,20 +88,57 @@ function loadLandscapeImage(url) {
   });
 }
 
-function renderSuggestions(filter = '') {
-  const needle = normalizeName(filter);
-  const matches = courseNamePool
-    .filter((name) => !needle || normalizeName(name).includes(needle))
-    .slice(0, 12);
+function hideSuggestions() {
+  suggestionListEl.hidden = true;
+  activeSuggestionIndex = -1;
+}
 
-  suggestionListEl.innerHTML = matches
-    .map((name) => `<option value="${name}"></option>`)
+function showSuggestions() {
+  suggestionListEl.hidden = filteredSuggestions.length === 0 || gameOver;
+}
+
+function selectSuggestion(index) {
+  const selected = filteredSuggestions[index];
+  if (!selected) {
+    return;
+  }
+
+  guessInputEl.value = selected;
+  hideSuggestions();
+}
+
+function renderSuggestionItems() {
+  suggestionListEl.innerHTML = filteredSuggestions
+    .map((name, index) => `
+      <li
+        class="suggestion-item${index === activeSuggestionIndex ? ' active' : ''}"
+        role="option"
+        aria-selected="${index === activeSuggestionIndex}"
+        data-index="${index}"
+      >${name}</li>`)
     .join('');
+
+  showSuggestions();
+}
+
+function updateSuggestions(filter = '') {
+  const needle = normalizeName(filter);
+  filteredSuggestions = courseNamePool
+    .filter((name) => !guesses.some((guess) => normalizeName(guess.course) === normalizeName(name)))
+    .filter((name) => !needle || normalizeName(name).includes(needle))
+    .slice(0, 8);
+
+  activeSuggestionIndex = filteredSuggestions.length ? 0 : -1;
+  renderSuggestionItems();
 }
 
 function renderGuesses() {
   guessListEl.innerHTML = guesses
-    .map((guess) => `<li>${guess}</li>`)
+    .map((guess, index) => `
+      <article class="guess-card${guess.correct ? ' correct' : ''}">
+        <span>${index + 1}. ${guess.course}</span>
+        <span class="guess-status">${guess.correct ? 'Correct' : 'Wrong'}</span>
+      </article>`)
     .join('');
 }
 
@@ -107,6 +147,7 @@ function finishGame(message) {
   gameOver = true;
   guessButtonEl.disabled = true;
   guessInputEl.disabled = true;
+  hideSuggestions();
 }
 
 function handleGuessSubmission() {
@@ -116,19 +157,37 @@ function handleGuessSubmission() {
 
   const rawGuess = guessInputEl.value.trim();
   if (!rawGuess) {
-    guessMessageEl.textContent = 'Type a course name before submitting.';
+    guessMessageEl.textContent = 'Select a course from the dropdown before submitting.';
     return;
   }
 
-  if (guesses.length >= MAX_GUESSES) {
-    finishGame(`No guesses remaining. The answer was ${targetCourse}.`);
+  let matchedCourse = courseNamePool.find(
+    (name) => normalizeName(name) === normalizeName(rawGuess)
+  );
+
+  if (!matchedCourse) {
+    const prefixMatches = courseNamePool.filter(
+      (name) => normalizeName(name).startsWith(normalizeName(rawGuess))
+    );
+    if (prefixMatches.length === 1) {
+      matchedCourse = prefixMatches[0];
+    }
+  }
+
+  if (!matchedCourse) {
+    guessMessageEl.textContent = 'Please choose a valid course from the suggestions list.';
     return;
   }
 
-  guesses.push(rawGuess);
+  if (guesses.some((guess) => normalizeName(guess.course) === normalizeName(matchedCourse))) {
+    guessMessageEl.textContent = 'You already guessed that course. Try another.';
+    return;
+  }
+
+  const isCorrect = normalizeName(matchedCourse) === normalizeName(targetCourse);
+  guesses.push({ course: matchedCourse, correct: isCorrect });
   renderGuesses();
 
-  const isCorrect = normalizeName(rawGuess) === normalizeName(targetCourse);
   const guessesUsed = guesses.length;
   const guessesLeft = MAX_GUESSES - guessesUsed;
 
@@ -142,8 +201,9 @@ function handleGuessSubmission() {
     return;
   }
 
-  guessMessageEl.textContent = `Not quite. ${guessesLeft} guess${guessesLeft === 1 ? '' : 'es'} left.`;
+  guessMessageEl.textContent = `Incorrect. ${guessesLeft} guesses remaining.`;
   guessInputEl.value = '';
+  updateSuggestions('');
   guessInputEl.focus();
 }
 
@@ -189,13 +249,45 @@ async function renderPhoto() {
 }
 
 guessButtonEl.addEventListener('click', handleGuessSubmission);
+guessInputEl.addEventListener('focus', () => updateSuggestions(guessInputEl.value));
+guessInputEl.addEventListener('input', () => updateSuggestions(guessInputEl.value));
+
 guessInputEl.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
+  if (event.key === 'ArrowDown' && filteredSuggestions.length) {
     event.preventDefault();
+    activeSuggestionIndex = (activeSuggestionIndex + 1) % filteredSuggestions.length;
+    renderSuggestionItems();
+  } else if (event.key === 'ArrowUp' && filteredSuggestions.length) {
+    event.preventDefault();
+    activeSuggestionIndex = (activeSuggestionIndex - 1 + filteredSuggestions.length) % filteredSuggestions.length;
+    renderSuggestionItems();
+  } else if (event.key === 'Enter') {
+    event.preventDefault();
+    if (!suggestionListEl.hidden && activeSuggestionIndex >= 0) {
+      selectSuggestion(activeSuggestionIndex);
+    }
     handleGuessSubmission();
+  } else if (event.key === 'Escape') {
+    hideSuggestions();
   }
 });
-guessInputEl.addEventListener('input', () => renderSuggestions(guessInputEl.value));
 
-renderSuggestions();
+suggestionListEl.addEventListener('mousedown', (event) => {
+  const item = event.target.closest('.suggestion-item');
+  if (!item) {
+    return;
+  }
+
+  event.preventDefault();
+  selectSuggestion(Number(item.dataset.index));
+  handleGuessSubmission();
+});
+
+document.addEventListener('click', (event) => {
+  if (!event.target.closest('.guess-input-wrap')) {
+    hideSuggestions();
+  }
+});
+
+updateSuggestions('');
 renderPhoto();
