@@ -6,8 +6,10 @@ const guessButtonEl = document.getElementById('guess-button');
 const guessMessageEl = document.getElementById('guess-message');
 const guessListEl = document.getElementById('guess-list');
 const suggestionListEl = document.getElementById('course-suggestions');
+const nextCourseButtonEl = document.getElementById('next-course-button');
 
 const MAX_GUESSES = 6;
+const COURSE_OFFSET_KEY = 'golfle-manual-course-offset';
 const GOLF_COM_SOURCE = 'https://golf.com/travel/courses/top-100-courses-world-2025-26/';
 const GOLF_DIGEST_SOURCE = 'https://www.golfdigest.com/story/americas-100-greatest-golf-courses-ranking';
 
@@ -75,6 +77,7 @@ const courseNamePool = COURSE_ROTATION.map((entry) => entry.course);
 
 let targetCourse = '';
 let gameOver = false;
+let manualCourseOffset = Number(localStorage.getItem(COURSE_OFFSET_KEY) || 0);
 let filteredSuggestions = [];
 let activeSuggestionIndex = -1;
 const guesses = [];
@@ -113,7 +116,9 @@ function loadLandscapeImage(url) {
 }
 
 function dailyStartIndex() {
-  return Math.floor(Date.now() / 86400000) % COURSE_ROTATION.length;
+  const dayIndex = Math.floor(Date.now() / 86400000) % COURSE_ROTATION.length;
+  const safeOffset = ((manualCourseOffset % COURSE_ROTATION.length) + COURSE_ROTATION.length) % COURSE_ROTATION.length;
+  return (dayIndex + safeOffset) % COURSE_ROTATION.length;
 }
 
 function hideSuggestions() {
@@ -145,7 +150,7 @@ function updateSuggestions(filter = '') {
   filteredSuggestions = courseNamePool
     .filter((name) => !guesses.some((guess) => normalizeName(guess.course) === normalizeName(name)))
     .filter((name) => !needle || normalizeName(name).includes(needle))
-    .slice(0, 8);
+    .sort((a, b) => a.localeCompare(b));
   activeSuggestionIndex = filteredSuggestions.length ? 0 : -1;
   renderSuggestionItems();
 }
@@ -166,6 +171,24 @@ function finishGame(message) {
   guessButtonEl.disabled = true;
   guessInputEl.disabled = true;
   hideSuggestions();
+}
+
+function resetGameState() {
+  guesses.length = 0;
+  gameOver = false;
+  guessButtonEl.disabled = false;
+  guessInputEl.disabled = false;
+  guessInputEl.value = '';
+  guessListEl.innerHTML = '';
+  hideSuggestions();
+}
+
+function switchCourseOfDay() {
+  manualCourseOffset = (manualCourseOffset + 1) % COURSE_ROTATION.length;
+  localStorage.setItem(COURSE_OFFSET_KEY, String(manualCourseOffset));
+  resetGameState();
+  updateSuggestions('');
+  renderPhoto();
 }
 
 function handleGuessSubmission() {
@@ -256,6 +279,7 @@ async function renderPhoto() {
 }
 
 guessButtonEl.addEventListener('click', handleGuessSubmission);
+nextCourseButtonEl.addEventListener('click', switchCourseOfDay);
 guessInputEl.addEventListener('focus', () => updateSuggestions(guessInputEl.value));
 guessInputEl.addEventListener('input', () => updateSuggestions(guessInputEl.value));
 
