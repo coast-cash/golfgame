@@ -28,9 +28,22 @@
 
       <label for="guess" class="label">Your guess</label>
       <div class="guess-row">
-        <input id="guess" placeholder="Start typing a course name..." />
-        <button type="button">Guess</button>
+        <input
+          id="guess"
+          list="course-suggestions"
+          autocomplete="off"
+          placeholder="Start typing a course name..."
+        />
+        <datalist id="course-suggestions"></datalist>
+        <button id="guess-button" type="button">Guess</button>
       </div>
+
+      <p id="guess-message" class="guess-message" aria-live="polite"></p>
+
+      <section class="guesses">
+        <h2>Guesses</h2>
+        <ol id="guess-list"></ol>
+      </section>
     </main>
     <script src="script.js"></script>
   </body>
