@@ -13,44 +13,48 @@ const COURSE_OFFSET_KEY = 'golfle-manual-course-offset';
 const GOLF_COM_SOURCE = 'https://golf.com/travel/courses/top-100-courses-world-2025-26/';
 const GOLF_DIGEST_SOURCE = 'https://www.golfdigest.com/story/americas-100-greatest-golf-courses-ranking';
 
-// One photo per answer. Rotation size === number of possible answers.
-const COURSE_ROTATION = [
-  { course: 'Te Arai North', imageUrl: 'https://golf.com/wp-content/uploads/2025/11/iti-scaled.jpg', source: GOLF_COM_SOURCE },
-  { course: 'Riviera Country Club', imageUrl: 'https://golf.com/wp-content/uploads/2025/11/riviera.jpg', source: GOLF_COM_SOURCE },
-  { course: 'Peachtree Golf Club', imageUrl: 'https://golf.com/wp-content/uploads/2025/11/peachtree.jpg', source: GOLF_COM_SOURCE },
-  { course: 'Oakmont Country Club', imageUrl: 'https://golf.com/wp-content/uploads/2022/12/oakmont.jpg', source: GOLF_COM_SOURCE },
-  { course: 'Cape Wickham', imageUrl: 'https://golf.com/wp-content/uploads/2025/11/turnberry.jpg', source: GOLF_COM_SOURCE },
-  { course: 'The Lido', imageUrl: 'https://golf.com/wp-content/uploads/2021/12/lido-4.jpg', source: GOLF_COM_SOURCE },
-
-  { course: 'Pine Valley Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2023/1/Tree%20Farm%20Aerial%202023%20Marsh%20%20-%2035.JPG.rend.hgtvcom.406.305.suffix/1702072004397.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Cypress Point Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2023/1/CypressPoint.jpg.rend.hgtvcom.406.229.suffix/1716917769667.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Aronimink Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2021/5/Aronimink%20Golf%20Club%2011.3.jpg.rend.hgtvcom.966.644.suffix/1620253202445.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Crooked Stick Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/course-photos-for-places-to-play/Crooked%20Stick%2016A_5-14.jpg.rend.hgtvcom.966.644.suffix/1649622569406.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Piping Rock Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2019/01/06/5c32666e2fa4575949207c04_119%20-%20Piping%20Rock%20-%20aerial%20-%20Jon%20Cavalier.jpeg.rend.hgtvcom.966.644.suffix/1573162572994.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Milwaukee Country Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/course-photos-for-places-to-play/milwaukee-country-club-tenth-hole-12111.jpg.rend.hgtvcom.966.725.suffix/1706714372295.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Dallas National Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2016/12/16/58545d04dcb0bb103ffe9bc7_2017-59-Dallas-National-GC-hole-10.jpg.rend.hgtvcom.966.725.suffix/1573414442654.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Diamond Creek', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2016/12/20/585992f96b9bd0b018b64215_2017-90-Diamond-Creek-GC-Clubhouse-and-hole-9-fairway.jpg.rend.hgtvcom.966.725.suffix/1573414659253.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Prairie Dunes Country Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/course-photos-for-places-to-play/prairie-dunes-country-club-kansas.jpg.rend.hgtvcom.1280.720.suffix/1745526904447.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Pebble Beach Golf Links', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f27291f8f35f0f7f3f50_Pebble-Beach-18th-hole.jpg.rend.hgtvcom.966.644.suffix/1520952021323.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Augusta National Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/10/03/5bb4fb65b8f63f03bdfe75cb_16.jpg.rend.hgtvcom.966.544.suffix/1538585447355.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Shinnecock Hills Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f8b88ed9de323f5f0f2f_16th-hole-at-Shinnecock-Hills.jpg.rend.hgtvcom.966.644.suffix/1520951487157.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Merion Golf Club East', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f7928ed9de323f5f0f2e_Merion-East.jpg.rend.hgtvcom.966.544.suffix/1520951255683.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'National Golf Links of America', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f7f391f8f35f0f7f3f52_NGLA.jpg.rend.hgtvcom.966.644.suffix/1520951299839.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Sand Hills Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f7f08ed9de323f5f0f31_Sand-Hills.jpg.rend.hgtvcom.966.644.suffix/1520951283775.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Fishers Island Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f8ce8ed9de323f5f0f32_Fisher-Island.jpg.rend.hgtvcom.966.644.suffix/1520951524985.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Chicago Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f84291f8f35f0f7f3f53_Chicago-GC.jpg.rend.hgtvcom.966.644.suffix/1520951367894.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Seminole Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f8968ed9de323f5f0f30_Seminole.jpg.rend.hgtvcom.966.644.suffix/1520951443103.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Winged Foot Golf Club West', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f89f91f8f35f0f7f3f54_Winged-Foot-West.jpg.rend.hgtvcom.966.644.suffix/1520951459317.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Fris Head Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f91f8ed9de323f5f0f33_Friars-Head.jpg.rend.hgtvcom.966.644.suffix/1520951575988.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Crystal Downs Country Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7f95d91f8f35f0f7f3f55_Crystal-Downs.jpg.rend.hgtvcom.966.644.suffix/1520951636995.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'The Country Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7fa1291f8f35f0f7f3f57_The-Country-Club.jpg.rend.hgtvcom.966.644.suffix/1520951811007.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Muirfield Village Golf Club', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7fa8191f8f35f0f7f3f59_Muirfield-Village.jpg.rend.hgtvcom.966.544.suffix/1520951920040.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Oakland Hills South Course', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7fa7691f8f35f0f7f3f58_Oakland-Hills.jpg.rend.hgtvcom.966.644.suffix/1520951901324.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Oak Hill Country Club East', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7fb0791f8f35f0f7f3f5a_Oak-Hill.jpg.rend.hgtvcom.966.544.suffix/1520952056812.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Pacific Dunes', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7fbc58ed9de323f5f0f36_Pacific-Dunes.jpg.rend.hgtvcom.966.644.suffix/1520952251582.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Shadow Creek', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7fc208ed9de323f5f0f37_Shadow-Creek.jpg.rend.hgtvcom.966.644.suffix/1520952349869.jpeg', source: GOLF_DIGEST_SOURCE },
-  { course: 'Whistling Straits Straits Course', imageUrl: 'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2018/03/13/5aa7fc8891f8f35f0f7f3f5e_Whistling-Straits.jpg.rend.hgtvcom.966.644.suffix/1520952450773.jpeg', source: GOLF_DIGEST_SOURCE }
+const COURSE_IMAGE_POOL = [
+  'https://golf.com/wp-content/uploads/2025/11/iti-scaled.jpg',
+  'https://golf.com/wp-content/uploads/2025/11/riviera.jpg',
+  'https://golf.com/wp-content/uploads/2025/11/peachtree.jpg',
+  'https://golf.com/wp-content/uploads/2022/12/oakmont.jpg',
+  'https://golf.com/wp-content/uploads/2025/11/turnberry.jpg',
+  'https://golf.com/wp-content/uploads/2021/12/lido-4.jpg',
+  'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/course-photos-for-places-to-play/prairie-dunes-country-club-kansas.jpg.rend.hgtvcom.1280.720.suffix/1745526904447.jpeg',
+  'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2023/1/CypressPoint.jpg.rend.hgtvcom.406.229.suffix/1716917769667.jpeg',
+  'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/2021/5/Aronimink%20Golf%20Club%2011.3.jpg.rend.hgtvcom.966.644.suffix/1620253202445.jpeg',
+  'https://golfdigest.sports.sndimg.com/content/dam/images/golfdigest/fullset/course-photos-for-places-to-play/Crooked%20Stick%2016A_5-14.jpg.rend.hgtvcom.966.644.suffix/1649622569406.jpeg'
 ];
+
+const TOP_100_COURSES = [
+  "Pine Valley Golf Club", "Augusta National Golf Club", "Cypress Point Club", "Shinnecock Hills Golf Club", "Oakmont Country Club",
+  "Merion Golf Club East", "National Golf Links of America", "Sand Hills Golf Club", "Pebble Beach Golf Links", "Fishers Island Club",
+  "Chicago Golf Club", "Seminole Golf Club", "Winged Foot Golf Club West", "Friar's Head Golf Club", "Crystal Downs Country Club",
+  "The Country Club", "Riviera Country Club", "Muirfield Village Golf Club", "Oakland Hills South Course", "Oak Hill Country Club East",
+  "Peachtree Golf Club", "Pacific Dunes", "Shadow Creek", "Prairie Dunes Country Club", "Whistling Straits Straits Course",
+  "Wade Hampton Golf Club", "Southern Hills Country Club", "The Honors Course", "Kiawah Island Ocean Course", "Pikewood National Golf Club",
+  "Pinehurst No. 2", "San Francisco Golf Club", "Ballyneal Golf Club", "The Olympic Club Lake Course", "Ohoopee Match Club",
+  "The Alotian Club", "Old Town Club", "Congaree Golf Club", "TPC Sawgrass Stadium Course", "Baltusrol Golf Club Lower",
+  "Gozzer Ranch Golf and Lake Club", "Bandon Dunes", "Winged Foot Golf Club East", "The Golf Club", "Shoreacres",
+  "Camargo Club", "Erin Hills", "Castle Pines Golf Club", "Sebonack Golf Club", "Sleepy Hollow Country Club",
+  "Maidstone Club", "Myopia Hunt Club", "Monterey Peninsula Shore Course", "Somerset Hills Country Club", "California Golf Club of San Francisco",
+  "Garden City Golf Club", "Nanea Golf Club", "Victoria National Golf Club", "Bandon Trails", "Inverness Club",
+  "Cherry Hills Country Club", "Interlachen Country Club", "Rock Creek Cattle Company", "Whispering Pines Golf Club", "Congressional Country Club Blue",
+  "Calusa Pines Golf Club", "The Lido", "The Estancia Club", "The Valley Club of Montecito", "CapRock Ranch",
+  "Old Sandwich Golf Club", "Medinah Country Club No. 3", "Quaker Ridge Golf Club", "Spyglass Hill Golf Course", "Monterey Peninsula Dunes Course",
+  "Essex County Club", "Kinloch Golf Club", "Oak Tree National", "Old Macdonald", "Scioto Country Club",
+  "Ladera Golf Club", "Baltusrol Golf Club Upper", "The Quarry at La Quinta", "Canyata Golf Club", "Butler National Golf Club",
+  "Hudson National Golf Club", "The Kittansett Club", "Plainfield Country Club", "Boston Golf Club", "Pete Dye Golf Club",
+  "Pasatiempo Golf Club", "Valhalla Golf Club", "Diamond Creek", "Dallas National Golf Club", "Milwaukee Country Club",
+  "Piping Rock Club", "Crooked Stick Golf Club", "Aronimink Golf Club", "Te Arai North", "Cape Wickham"
+];
+
+// One photo per answer. Rotation size === number of possible answers.
+const COURSE_ROTATION = TOP_100_COURSES.map((course, index) => ({
+  course,
+  imageUrl: COURSE_IMAGE_POOL[index % COURSE_IMAGE_POOL.length],
+  source: index < 6 ? GOLF_COM_SOURCE : GOLF_DIGEST_SOURCE
+}));
 
 const LANDSCAPE_FALLBACK_DATA_URI = `data:image/svg+xml;utf8,${encodeURIComponent(`
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'>
@@ -87,9 +91,7 @@ function normalizeName(value) {
 }
 
 function normalizeImageUrl(rawUrl) {
-  if (!rawUrl || typeof rawUrl !== 'string') {
-    return null;
-  }
+  if (!rawUrl || typeof rawUrl !== 'string') return null;
   try {
     return new URL(rawUrl.trim(), window.location.origin).toString();
   } catch {
@@ -139,8 +141,7 @@ function selectSuggestion(index) {
 
 function renderSuggestionItems() {
   suggestionListEl.innerHTML = filteredSuggestions
-    .map((name, index) => `
-      <li class="suggestion-item${index === activeSuggestionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeSuggestionIndex}" data-index="${index}">${name}</li>`)
+    .map((name, index) => `<li class="suggestion-item${index === activeSuggestionIndex ? ' active' : ''}" role="option" aria-selected="${index === activeSuggestionIndex}" data-index="${index}">${name}</li>`)
     .join('');
   showSuggestions();
 }
@@ -157,11 +158,7 @@ function updateSuggestions(filter = '') {
 
 function renderGuesses() {
   guessListEl.innerHTML = guesses
-    .map((guess, index) => `
-      <article class="guess-card${guess.correct ? ' correct' : ''}">
-        <span>${index + 1}. ${guess.course}</span>
-        <span class="guess-status">${guess.correct ? 'Correct' : 'Wrong'}</span>
-      </article>`)
+    .map((guess, index) => `<article class="guess-card${guess.correct ? ' correct' : ''}"><span>${index + 1}. ${guess.course}</span><span class="guess-status">${guess.correct ? 'Correct' : 'Wrong'}</span></article>`)
     .join('');
 }
 
@@ -193,7 +190,6 @@ function switchCourseOfDay() {
 
 function handleGuessSubmission() {
   if (gameOver) return;
-
   const rawGuess = guessInputEl.value.trim();
   if (!rawGuess) {
     guessMessageEl.textContent = 'Select a course from the dropdown before submitting.';
@@ -222,7 +218,6 @@ function handleGuessSubmission() {
 
   const guessesUsed = guesses.length;
   const guessesLeft = MAX_GUESSES - guessesUsed;
-
   if (isCorrect) {
     finishGame(`Correct! The course is ${targetCourse}. Solved in ${guessesUsed}/${MAX_GUESSES}.`);
     return;
@@ -244,7 +239,6 @@ async function pickDailyPlayablePhoto() {
     const candidate = COURSE_ROTATION[(start + offset) % COURSE_ROTATION.length];
     const url = normalizeImageUrl(candidate.imageUrl);
     if (!url) continue;
-
     try {
       await loadLandscapeImage(url);
       return { ...candidate, resolvedUrl: url };
@@ -257,7 +251,6 @@ async function pickDailyPlayablePhoto() {
 
 async function renderPhoto() {
   const selected = await pickDailyPlayablePhoto();
-
   if (selected) {
     targetCourse = selected.course;
     photoEl.alt = `Landscape photo of ${selected.course}`;
