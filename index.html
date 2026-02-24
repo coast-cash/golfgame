@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Golfle</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Golfle</h1>
+      <div class="subtitle-row">
+        <p class="subtitle">Guess the golf course from today's photo in 6 tries.</p>
+        <button id="next-course-button" type="button" class="secondary-btn">Switch course of the day</button>
+      </div>
+
+      <figure class="photo-wrap">
+        <img
+          id="daily-photo"
+          class="photo"
+          alt="Daily hole photo"
+          loading="eager"
+          decoding="async"
+        />
+        <figcaption id="photo-caption" class="sr-only"></figcaption>
+      </figure>
+
+      <p id="image-error" class="image-error" hidden>
+        We couldn't load today's photo. Please refresh and try again.
+      </p>
+
+      <label for="guess" class="label">Your guess</label>
+      <div class="guess-row">
+        <div class="guess-input-wrap">
+          <input
+            id="guess"
+            autocomplete="off"
+            placeholder="Type a course name"
+            aria-autocomplete="list"
+            aria-controls="course-suggestions"
+          />
+          <ul id="course-suggestions" class="suggestions" role="listbox" hidden></ul>
+        </div>
+        <button id="guess-button" type="button">Guess</button>
+      </div>
+
+      <p id="guess-message" class="guess-message" aria-live="polite"></p>
+
+      <section class="guesses">
+        <h2>Guesses</h2>
+        <div id="guess-list" class="guess-list"></div>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
