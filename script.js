@@ -1,0 +1,110 @@
+const photoEl = document.getElementById('daily-photo');
+const captionEl = document.getElementById('photo-caption');
+const errorEl = document.getElementById('image-error');
+
+const SOURCE_PAGE = 'https://golf.com/travel/courses/top-100-courses-world-2025-26/';
+
+// Course-photo image set sourced from the requested Golf.com Top 100 page.
+// (Using direct image assets from the article and excluding non-course logos/icons.)
+const golfDotComCoursePhotos = [
+  { course: 'Iti', imageUrl: 'https://golf.com/wp-content/uploads/2025/11/iti-scaled.jpg' },
+  { course: 'Riviera', imageUrl: 'https://golf.com/wp-content/uploads/2025/11/riviera.jpg' },
+  { course: 'Peachtree', imageUrl: 'https://golf.com/wp-content/uploads/2025/11/peachtree.jpg' },
+  { course: 'Oakmont', imageUrl: 'https://golf.com/wp-content/uploads/2022/12/oakmont.jpg' },
+  { course: 'Turnberry', imageUrl: 'https://golf.com/wp-content/uploads/2025/11/turnberry.jpg' },
+  { course: 'Lido', imageUrl: 'https://golf.com/wp-content/uploads/2021/12/lido-4.jpg' }
+];
+
+// Local guaranteed fallback to prevent text-only broken-image states.
+const LANDSCAPE_FALLBACK_DATA_URI = `data:image/svg+xml;utf8,${encodeURIComponent(`
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'>
+  <defs>
+    <linearGradient id='sky' x1='0' y1='0' x2='0' y2='1'>
+      <stop offset='0%' stop-color='#8ecdf7'/>
+      <stop offset='100%' stop-color='#d7efff'/>
+    </linearGradient>
+    <linearGradient id='fairway' x1='0' y1='0' x2='0' y2='1'>
+      <stop offset='0%' stop-color='#8bcf73'/>
+      <stop offset='100%' stop-color='#5f9f4e'/>
+    </linearGradient>
+  </defs>
+  <rect width='1600' height='900' fill='url(#sky)'/>
+  <ellipse cx='820' cy='600' rx='920' ry='330' fill='url(#fairway)'/>
+  <ellipse cx='830' cy='610' rx='520' ry='170' fill='#9ed57f' opacity='0.85'/>
+  <path d='M160 690 C450 540, 900 560, 1390 700' stroke='#d0b38b' stroke-width='70' fill='none' stroke-linecap='round'/>
+  <circle cx='1180' cy='505' r='11' fill='#fff'/>
+  <rect x='1178' y='410' width='4' height='95' fill='#2f2f2f'/>
+  <path d='M1182 412 L1240 438 L1182 454 Z' fill='#e53935'/>
+</svg>
+`)}`;
+
+function normalizeImageUrl(rawUrl) {
+  if (!rawUrl || typeof rawUrl !== 'string') {
+    return null;
+  }
+
+  try {
+    return new URL(rawUrl.trim(), window.location.origin).toString();
+  } catch {
+    return null;
+  }
+}
+
+function loadLandscapeImage(url) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.decoding = 'async';
+    image.referrerPolicy = 'no-referrer';
+    image.onload = () => {
+      const isLandscape = image.naturalWidth >= image.naturalHeight * 1.2;
+      if (!isLandscape) {
+        reject(new Error('Not landscape enough'));
+        return;
+      }
+
+      resolve(url);
+    };
+
+    image.onerror = () => reject(new Error('Failed to load image'));
+    image.src = url;
+  });
+}
+
+async function pickPlayablePhoto() {
+  for (const candidate of golfDotComCoursePhotos) {
+    const url = normalizeImageUrl(candidate.imageUrl);
+    if (!url) {
+      continue;
+    }
+
+    try {
+      await loadLandscapeImage(url);
+      return { ...candidate, resolvedUrl: url };
+    } catch {
+      // Try next Golf.com course image.
+    }
+  }
+
+  return null;
+}
+
+async function renderPhoto() {
+  const selected = await pickPlayablePhoto();
+
+  if (selected) {
+    photoEl.alt = `Landscape photo of ${selected.course}`;
+    photoEl.src = selected.resolvedUrl;
+    photoEl.hidden = false;
+    errorEl.hidden = true;
+    captionEl.textContent = `Photo: ${selected.course} · Source: ${SOURCE_PAGE}`;
+    return;
+  }
+
+  photoEl.alt = 'Landscape fallback golf course image';
+  photoEl.src = LANDSCAPE_FALLBACK_DATA_URI;
+  photoEl.hidden = false;
+  errorEl.hidden = true;
+  captionEl.textContent = `Photo: Fallback landscape · Source: ${SOURCE_PAGE}`;
+}
+
+renderPhoto();

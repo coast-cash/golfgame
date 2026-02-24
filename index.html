@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Golfle</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Golfle</h1>
+      <p class="subtitle">Guess the golf course from today's photo in 6 tries.</p>
+
+      <figure class="photo-wrap">
+        <img
+          id="daily-photo"
+          class="photo"
+          alt="Daily hole photo"
+          loading="eager"
+          decoding="async"
+        />
+        <figcaption id="photo-caption" class="sr-only"></figcaption>
+      </figure>
+
+      <p id="image-error" class="image-error" hidden>
+        We couldn't load today's photo. Please refresh and try again.
+      </p>
+
+      <label for="guess" class="label">Your guess</label>
+      <div class="guess-row">
+        <input id="guess" placeholder="Start typing a course name..." />
+        <button type="button">Guess</button>
+      </div>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
